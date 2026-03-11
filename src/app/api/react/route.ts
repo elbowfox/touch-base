@@ -6,7 +6,12 @@ import { REACTIONS } from "@/lib/utils";
 const validReactions = REACTIONS.map((r) => r.key);
 
 export async function POST(request: NextRequest) {
-  const body: ReactPayload = await request.json();
+  let body: ReactPayload;
+  try {
+    body = await request.json();
+  } catch (error) {
+    return NextResponse.json({ error: "Invalid JSON payload" }, { status: 400 });
+  }
 
   if (!body.ventId || typeof body.ventId !== "string") {
     return NextResponse.json({ error: "ventId is required" }, { status: 400 });
