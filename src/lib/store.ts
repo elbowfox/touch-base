@@ -1,7 +1,12 @@
 import { Vent, KindnessReaction } from "./types";
 
-// In-memory store for vents (resets on server restart).
-// In production, replace with a database.
+// In-memory store for vents. Data is kept only in this server process and:
+// - is NOT shared across serverless/function instances or replicas
+// - will reset on redeploy/restart or when the process is recycled
+//
+// This is intended only for local demos/development. For any production or
+// serverless deployment (e.g. Vercel), replace this with a persistent
+// backing store (database or key-value store).
 const vents: Vent[] = [
   {
     id: "seed-1",

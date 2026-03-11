@@ -8,7 +8,12 @@ export function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const body: CreateVentPayload = await request.json();
+  let body: CreateVentPayload;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
 
   if (!body.content || typeof body.content !== "string") {
     return NextResponse.json({ error: "Content is required" }, { status: 400 });
@@ -22,12 +27,14 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const anonymous = body.anonymous !== false;
+
   const vent: Vent = {
     id: generateId(),
     content: trimmed,
-    anonymous: body.anonymous !== false,
-    authorHandle: body.anonymous ? undefined : body.authorHandle,
-    authorFid: body.anonymous ? undefined : body.authorFid,
+    anonymous,
+    authorHandle: anonymous ? undefined : body.authorHandle,
+    authorFid: anonymous ? undefined : body.authorFid,
     createdAt: new Date().toISOString(),
     reactions: { heart: 0, hug: 0, light: 0, solidarity: 0 },
   };

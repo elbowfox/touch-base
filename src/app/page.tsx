@@ -19,11 +19,15 @@ export default function FeedPage() {
 
   const handleReact = useCallback(
     async (ventId: string, reaction: KindnessReaction) => {
-      await fetch("/api/react", {
+      const res = await fetch("/api/react", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ventId, reaction }),
       });
+
+      if (!res.ok) {
+        throw new Error("Failed to send reaction");
+      }
     },
     []
   );
