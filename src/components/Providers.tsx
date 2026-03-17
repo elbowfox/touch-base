@@ -18,7 +18,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       createConfig({
         chains: [CHAIN],
         connectors: [farcasterFrame()],
-        transports: { [CHAIN.id]: http() },
+        transports: { [base.id]: http(), [baseSepolia.id]: http() },
       }),
     []
   );
