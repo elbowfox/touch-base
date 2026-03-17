@@ -2,5 +2,15 @@
   "framework": "nextjs",
   "installCommand": "npm install --legacy-peer-deps",
   "buildCommand": "npm run build",
-  "outputDirectory": ".next"
+  "outputDirectory": ".next",
+  "env": {
+    "NEXT_PUBLIC_APP_URL": "https://touch-base-elbowfiles.vercel.app",
+    "NEXT_PUBLIC_NETWORK": "testnet"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_APP_URL": "https://touch-base-elbowfiles.vercel.app",
+      "NEXT_PUBLIC_NETWORK": "testnet"
+    }
+  }
 }
