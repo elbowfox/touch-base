@@ -4,12 +4,12 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
   "env": {
-    "NEXT_PUBLIC_APP_URL": "https://touch-base-elbowfiles.vercel.app",
+    "NEXT_PUBLIC_APP_URL": "https://touchbase.thevisualbrand.us",
     "NEXT_PUBLIC_NETWORK": "testnet"
   },
   "build": {
     "env": {
-      "NEXT_PUBLIC_APP_URL": "https://touch-base-elbowfiles.vercel.app",
+      "NEXT_PUBLIC_APP_URL": "https://touchbase.thevisualbrand.us",
       "NEXT_PUBLIC_NETWORK": "testnet"
     }
   }
