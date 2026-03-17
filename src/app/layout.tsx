@@ -19,6 +19,8 @@ export const metadata: Metadata = {
     images: [{ url: `${APP_URL}/og-image.png`, width: 1200, height: 630 }],
   },
   other: {
+    // Base.dev app verification
+    "base:app_id": "6992f19a7ca07f5750bbdb75",
     // Farcaster Frame v2 metadata
     "fc:frame": JSON.stringify({
       version: "next",
