@@ -19,7 +19,7 @@ export const KP_MILESTONES = [
 ] as const;
 
 // App metadata
-export const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://touch-base.vercel.app";
+export const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://touchbase.thevisualbrand.us";
 export const APP_NAME = "TouchBase";
 export const APP_DESCRIPTION = "Your home base — a safe, supportive place to get back in touch with yourself and your humanity.";
 
