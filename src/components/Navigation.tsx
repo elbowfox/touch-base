@@ -13,6 +13,9 @@ const links = [
 export default function Navigation() {
   const pathname = usePathname();
 
+  // SoulCraft has its own standalone UI — hide TouchBase nav there
+  if (pathname.startsWith('/soulcraft')) return null;
+
   return (
     <nav
       aria-label="Main navigation"

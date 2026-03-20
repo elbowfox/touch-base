@@ -292,9 +292,7 @@ function WizardContent() {
 
   const [chapterIndex, setChapterIndex] = useState(0);
   const [answers, setAnswers] = useState<WizardAnswers>(INITIAL_ANSWERS);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generationError, setGenerationError] = useState('');
-  const [generationProgress, setGenerationProgress] = useState('');
+  const [validationError, setValidationError] = useState('');
   const topRef = useRef<HTMLDivElement>(null);
 
   const chapter = CHAPTERS[chapterIndex];
@@ -348,101 +346,17 @@ function WizardContent() {
     }
   };
 
-  const handleBirth = async () => {
+  const handleBirth = () => {
     if (!allRequiredAnswered) return;
-    setIsGenerating(true);
-    setGenerationError('');
-
-    const progressMessages = [
-      'Consulting the archetypes...',
-      'Weaving personality threads...',
-      'Establishing the bond...',
-      'Building the memory palace...',
-      'Arming the arsenal...',
-      'Calibrating the heartbeat...',
-      'Breathing life into the soul...',
-      'Final integration...',
-    ];
-
-    let msgIdx = 0;
-    setGenerationProgress(progressMessages[0]);
-    const interval = setInterval(() => {
-      msgIdx = (msgIdx + 1) % progressMessages.length;
-      setGenerationProgress(progressMessages[msgIdx]);
-    }, 2200);
-
-    try {
-      const tier = initTier === 'spark' ? 'free' : initTier;
-      const res = await fetch('/api/soulcraft/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ answers, tier }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error ?? 'Generation failed');
-      }
-
-      const reader = res.body?.getReader();
-      const decoder = new TextDecoder();
-      let fullText = '';
-
-      while (reader) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        fullText += decoder.decode(value, { stream: true });
-      }
-
-      clearInterval(interval);
-      localStorage.setItem('soulcraft_generated', fullText);
-      localStorage.setItem('soulcraft_answers_meta', JSON.stringify({ agentName: answers.agentName, archetype: answers.archetype, tier }));
-      router.push('/soulcraft/result');
-    } catch (err) {
-      clearInterval(interval);
-      setGenerationError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
-      setIsGenerating(false);
-    }
+    const tier = initTier === 'spark' ? 'free' : initTier;
+    // Save answers and navigate — the result page handles streaming
+    localStorage.setItem('soulcraft_wizard_answers', JSON.stringify(answers));
+    localStorage.setItem('soulcraft_answers_meta', JSON.stringify({ agentName: answers.agentName, archetype: answers.archetype, tier }));
+    localStorage.removeItem('soulcraft_generated');
+    router.push(`/soulcraft/result?mode=generate&tier=${tier}`);
   };
 
   const isLastChapter = chapterIndex === totalChapters - 1;
-
-  if (isGenerating) {
-    return (
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '2rem', background: '#060610' }}>
-        {/* Cosmic animation */}
-        <div style={{ position: 'relative', width: '120px', height: '120px', marginBottom: '2.5rem' }}>
-          <div style={{
-            position: 'absolute', inset: 0, borderRadius: '50%',
-            border: '2px solid transparent',
-            borderTopColor: '#a855f7',
-            animation: 'spin 1.5s linear infinite',
-          }} />
-          <div style={{
-            position: 'absolute', inset: '12px', borderRadius: '50%',
-            border: '2px solid transparent',
-            borderTopColor: '#6366f1',
-            animation: 'spin 2s linear infinite reverse',
-          }} />
-          <div style={{
-            position: 'absolute', inset: '24px', borderRadius: '50%',
-            border: '2px solid transparent',
-            borderTopColor: '#f43f5e',
-            animation: 'spin 2.5s linear infinite',
-          }} />
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem' }}>✦</div>
-        </div>
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-        <h2 style={{ fontSize: '1.75rem', fontWeight: 700, letterSpacing: '-0.02em', marginBottom: '0.75rem', background: 'linear-gradient(135deg, #e2e8f0, #a855f7)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-          Birth in progress...
-        </h2>
-        <p style={{ color: '#6366f1', fontSize: '1rem', fontStyle: 'italic', minHeight: '1.5rem', transition: 'opacity 0.3s' }}>
-          {generationProgress}
-        </p>
-        <p style={{ color: '#334155', fontSize: '0.8125rem', marginTop: '1.5rem' }}>Claude is crafting all 5 SOUL files. This takes ~20–40 seconds.</p>
-      </div>
-    );
-  }
 
   return (
     <div ref={topRef} style={{ minHeight: '100vh', background: '#060610', color: '#e2e8f0', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
@@ -540,9 +454,9 @@ function WizardContent() {
                 Complete required questions to continue
               </p>
             )}
-            {generationError && (
+            {validationError && (
               <p style={{ fontSize: '0.8125rem', color: '#ef4444', margin: '0 0 0.5rem', maxWidth: '300px' }}>
-                ⚠ {generationError}
+                ⚠ {validationError}
               </p>
             )}
           </div>
