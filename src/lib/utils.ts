@@ -26,6 +26,7 @@ export function timeAgo(isoString: string): string {
 }
 
 export const MAX_VENT_LENGTH = 280;
+export const PREMIUM_MAX_VENT_LENGTH = 600;
 
 export function classNames(...classes: (string | false | null | undefined)[]): string {
   return classes.filter(Boolean).join(" ");
