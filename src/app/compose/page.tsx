@@ -1,13 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ComposeForm from "@/components/ComposeForm";
-import { Vent } from "@/lib/types";
+import { Vent, UserProfile } from "@/lib/types";
+
+function loadProfile(): UserProfile | null {
+  try {
+    const raw = typeof window !== "undefined" ? localStorage.getItem("tb_profile") : null;
+    return raw ? (JSON.parse(raw) as UserProfile) : null;
+  } catch {
+    return null;
+  }
+}
 
 export default function ComposePage() {
   const router = useRouter();
   const [submitted, setSubmitted] = useState(false);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+
+  useEffect(() => {
+    setProfile(loadProfile());
+  }, []);
+
+  const isPremiumActive =
+    profile?.isPremium &&
+    profile.premiumExpiry &&
+    new Date(profile.premiumExpiry) > new Date();
 
   function handleCreated(_: Vent) {
     setSubmitted(true);
@@ -35,7 +54,12 @@ export default function ComposePage() {
           </div>
         ) : (
           <>
-            <ComposeForm onCreated={handleCreated} />
+            <ComposeForm
+              authorHandle={profile?.farcasterHandle}
+              authorFid={profile?.farcasterId}
+              isPremium={!!isPremiumActive}
+              onCreated={handleCreated}
+            />
 
             <aside className="mt-6 rounded-xl border border-stone-200 bg-stone-100 p-4 text-xs leading-relaxed text-stone-500 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-400">
               <p className="font-medium text-stone-700 dark:text-stone-300">
