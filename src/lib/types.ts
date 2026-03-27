@@ -67,6 +67,10 @@ export interface UserProfile {
   // Sanctuary Premium
   isPremium?: boolean;
   premiumExpiry?: string; // ISO date string
+  // Referral tracking (Elvis bot / Telegram)
+  referralSource?: string;   // e.g. "elvis"
+  telegramUserId?: string;
+  referralToken?: string;
 }
 
 // ─── Resources ───────────────────────────────────────────────────────────────
@@ -105,6 +109,25 @@ export interface KPMilestone {
   threshold: number;
   reward: string;
   reached: boolean;
+}
+
+// ─── Elvis (Telegram Bot) Integration ────────────────────────────────────────
+
+export interface ElvisReferral {
+  /** Unique referral token for tracking */
+  token: string;
+  /** Telegram user ID */
+  telegramUserId: string;
+  /** Telegram display name (first_name) */
+  telegramName?: string;
+  /** Telegram username (without @) */
+  telegramUsername?: string;
+  /** ISO timestamp when the referral was created */
+  createdAt: string;
+  /** Whether the user has completed onboarding */
+  onboardingComplete: boolean;
+  /** ISO timestamp when onboarding was completed */
+  onboardingCompletedAt?: string;
 }
 
 // ─── Mini-app Manifest ───────────────────────────────────────────────────────
