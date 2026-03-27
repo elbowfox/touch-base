@@ -7,7 +7,7 @@ const links = [
   { href: "/", label: "Home", icon: "🌿" },
   { href: "/feed", label: "Feed", icon: "🌊" },
   { href: "/compose", label: "Vent", icon: "✦" },
-  { href: "/onboarding", label: "Profile", icon: "🤝" },
+  { href: "/profile", label: "Profile", icon: "🤝" },
 ];
 
 export default function Navigation() {

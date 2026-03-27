@@ -39,8 +39,8 @@ export default function Home() {
           {[
             { emoji: "📍", title: "Local resources", desc: "Nearby support matched to what you're going through." },
             { emoji: "🎭", title: "Your choice", desc: "Post anonymously by default. Reveal yourself only when ready." },
-            { emoji: "💛", title: "Kindness rewards", desc: "Support earns BASE-chain points redeemable on-chain." },
-            { emoji: "🤝", title: "Real connection", desc: "Encrypted DMs. Reach out without revealing yourself." },
+            { emoji: "💛", title: "Kindness rewards", desc: "Earn BASE-chain points for every act of support. 2× with Sanctuary Premium." },
+            { emoji: "🏅", title: "Sanctuary Premium", desc: "2× KP, 600-char vents, priority resources — $2.99 USDC/mo on BASE." },
           ].map((f) => (
             <div
               key={f.title}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { MAX_VENT_LENGTH } from "@/lib/utils";
+import { MAX_VENT_LENGTH, PREMIUM_MAX_VENT_LENGTH } from "@/lib/utils";
 import { Vent } from "@/lib/types";
 import { moderateContent } from "@/lib/moderation";
 import ResourceCard from "./ResourceCard";
@@ -10,12 +10,14 @@ import { DEFAULT_RESOURCES } from "@/lib/resources";
 interface ComposeFormProps {
   authorHandle?: string;
   authorFid?: number;
+  isPremium?: boolean;
   onCreated: (vent: Vent) => void;
 }
 
 export default function ComposeForm({
   authorHandle,
   authorFid,
+  isPremium = false,
   onCreated,
 }: ComposeFormProps) {
   const [content, setContent] = useState("");
@@ -24,7 +26,8 @@ export default function ComposeForm({
   const [error, setError] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const remaining = MAX_VENT_LENGTH - content.length;
+  const maxLength = isPremium ? PREMIUM_MAX_VENT_LENGTH : MAX_VENT_LENGTH;
+  const remaining = maxLength - content.length;
   const canSubmit = content.trim().length > 0 && remaining >= 0 && !submitting;
 
   // Live content moderation check
@@ -46,6 +49,7 @@ export default function ComposeForm({
           anonymous,
           authorHandle: anonymous ? undefined : authorHandle,
           authorFid: anonymous ? undefined : authorFid,
+          isPremium,
         }),
       });
       if (!res.ok) {
@@ -75,6 +79,12 @@ export default function ComposeForm({
         </div>
       )}
 
+      {isPremium && (
+        <p className="text-xs text-amber-600 dark:text-amber-400 font-medium">
+          🏅 Sanctuary — up to {PREMIUM_MAX_VENT_LENGTH} characters
+        </p>
+      )}
+
       <label className="sr-only" htmlFor="vent-content">
         What&apos;s on your mind?
       </label>
@@ -85,7 +95,7 @@ export default function ComposeForm({
         onChange={(e) => setContent(e.target.value)}
         placeholder="Let it out… this space is safe."
         rows={5}
-        maxLength={MAX_VENT_LENGTH + 1}
+        maxLength={maxLength + 1}
         className="w-full resize-none rounded-2xl border border-stone-200 bg-white p-4 text-sm leading-relaxed text-stone-700 placeholder-stone-400 outline-none focus:border-stone-400 focus:ring-2 focus:ring-stone-200 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300 dark:placeholder-stone-600 dark:focus:border-stone-500 dark:focus:ring-stone-800"
         aria-describedby="char-count"
       />

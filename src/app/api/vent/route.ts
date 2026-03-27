@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { addVent, getVents } from "@/lib/store";
-import { generateId } from "@/lib/utils";
+import { generateId, MAX_VENT_LENGTH, PREMIUM_MAX_VENT_LENGTH } from "@/lib/utils";
 import { CreateVentPayload, Vent } from "@/lib/types";
 import { getResourcesForVent } from "@/lib/resources";
 import { moderateContent } from "@/lib/moderation";
@@ -10,7 +10,7 @@ export function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  let body: CreateVentPayload;
+  let body: CreateVentPayload & { isPremium?: boolean };
   try {
     body = await request.json();
   } catch {
@@ -22,9 +22,10 @@ export async function POST(request: NextRequest) {
   }
 
   const trimmed = body.content.trim();
-  if (trimmed.length === 0 || trimmed.length > 280) {
+  const maxLen = body.isPremium ? PREMIUM_MAX_VENT_LENGTH : MAX_VENT_LENGTH;
+  if (trimmed.length === 0 || trimmed.length > maxLen) {
     return NextResponse.json(
-      { error: "Content must be between 1 and 280 characters" },
+      { error: `Content must be between 1 and ${maxLen} characters` },
       { status: 400 }
     );
   }

@@ -110,7 +110,29 @@ export default function ProfileStep({ profile, onChange, onFinish, onBack }: Pro
         </label>
       </div>
 
-      <div className="mt-8 flex justify-between">
+      {/* Sanctuary Premium upsell */}
+      <div className="mt-6 rounded-2xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/20 p-4">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-lg">🏅</span>
+          <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">Unlock Sanctuary Premium</p>
+        </div>
+        <ul className="space-y-1 mb-3">
+          {[
+            "2× Kindness Points on everything",
+            "600-char vents (double the space)",
+            "Priority resource matching",
+          ].map((f) => (
+            <li key={f} className="text-xs text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
+              <span>✦</span>{f}
+            </li>
+          ))}
+        </ul>
+        <p className="text-xs text-amber-600 dark:text-amber-500">
+          $2.99 USDC/month · Upgrade any time from your Profile
+        </p>
+      </div>
+
+      <div className="mt-6 flex justify-between">
         <button onClick={onBack} className="border border-stone-300 dark:border-stone-600 text-stone-700 dark:text-stone-300 px-5 py-2.5 rounded-xl font-medium hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors">← Back</button>
         <button onClick={onFinish} className="bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900 px-6 py-2.5 rounded-xl font-semibold hover:bg-stone-700 transition-colors">Let&apos;s go ✦</button>
       </div>
