@@ -3,7 +3,8 @@
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { Vent, KindnessReaction, UserProfile } from "@/lib/types";
-import { KP_REWARDS } from "@/lib/constants";
+import { KP_REWARDS, PREMIUM_KP_MULTIPLIER } from "@/lib/constants";
+import { TIP_SENDER_KP } from "@/lib/payments";
 import VentCard from "@/components/VentCard";
 import RewardsWidget from "@/components/RewardsWidget";
 import ZenLoading from "@/components/ZenLoading";
@@ -24,6 +25,19 @@ function saveProfile(p: UserProfile) {
   try { localStorage.setItem("tb_profile", JSON.stringify(p)); } catch { /* ignore */ }
 }
 
+function kpMultiplier(profile: UserProfile): number {
+  const isPremiumActive =
+    profile.isPremium &&
+    profile.premiumExpiry &&
+    new Date(profile.premiumExpiry) > new Date();
+  return isPremiumActive ? PREMIUM_KP_MULTIPLIER : 1;
+}
+
+function addKp(profile: UserProfile, base: number): UserProfile {
+  const earned = base * kpMultiplier(profile);
+  return { ...profile, rewardsBalance: profile.rewardsBalance + earned };
+}
+
 // ─── Feed Page ────────────────────────────────────────────────────────────────
 
 export default function FeedPage() {
@@ -42,6 +56,11 @@ export default function FeedPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  function updateProfile(updated: UserProfile) {
+    setProfile(updated);
+    saveProfile(updated);
+  }
+
   const handleReact = useCallback(
     async (ventId: string, reaction: KindnessReaction) => {
       await fetch("/api/react", {
@@ -50,12 +69,10 @@ export default function FeedPage() {
         body: JSON.stringify({ ventId, reaction }),
       });
       if (profile) {
-        const updated = { ...profile, rewardsBalance: profile.rewardsBalance + KP_REWARDS.GIVE_HELPFUL_VOTE };
-        setProfile(updated);
-        saveProfile(updated);
+        updateProfile(addKp(profile, KP_REWARDS.GIVE_HELPFUL_VOTE));
       }
     },
-    [profile]
+    [profile] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   function handleHelpful(ventId: string) {
@@ -63,9 +80,7 @@ export default function FeedPage() {
       prev.map((v) => v.id === ventId ? { ...v, helpfulVotes: (v.helpfulVotes ?? 0) + 1 } : v)
     );
     if (profile) {
-      const updated = { ...profile, rewardsBalance: profile.rewardsBalance + KP_REWARDS.GIVE_HELPFUL_VOTE };
-      setProfile(updated);
-      saveProfile(updated);
+      updateProfile(addKp(profile, KP_REWARDS.GIVE_HELPFUL_VOTE));
     }
   }
 
@@ -88,20 +103,36 @@ export default function FeedPage() {
       })
     );
     if (profile) {
-      const updated = { ...profile, rewardsBalance: profile.rewardsBalance + KP_REWARDS.POST_REPLY };
-      setProfile(updated);
-      saveProfile(updated);
+      updateProfile(addKp(profile, KP_REWARDS.POST_REPLY));
     }
   }
+
+  function handleTip(_ventId: string, _amountUsd: number) {
+    if (profile) {
+      updateProfile(addKp(profile, TIP_SENDER_KP));
+    }
+  }
+
+  const isPremiumActive =
+    profile?.isPremium &&
+    profile.premiumExpiry &&
+    new Date(profile.premiumExpiry) > new Date();
 
   return (
     <div className="min-h-screen">
       {/* Header */}
       <header className="sticky top-0 z-10 border-b border-stone-200 bg-stone-50/90 px-5 py-4 backdrop-blur-sm dark:border-stone-800 dark:bg-stone-950/90 flex items-center justify-between">
         <div>
-          <h1 className="text-base font-semibold tracking-tight text-stone-800 dark:text-stone-100">
-            TouchBase
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-base font-semibold tracking-tight text-stone-800 dark:text-stone-100">
+              TouchBase
+            </h1>
+            {isPremiumActive && (
+              <span className="rounded-full bg-amber-100 dark:bg-amber-900/40 px-2 py-0.5 text-xs font-semibold text-amber-700 dark:text-amber-400">
+                🏅 Sanctuary
+              </span>
+            )}
+          </div>
           <p className="text-xs text-stone-400">You are not alone.</p>
         </div>
         <div className="flex items-center gap-2">
@@ -127,7 +158,10 @@ export default function FeedPage() {
 
       <main className="flex flex-col gap-3 p-4">
         {showRewards && profile && (
-          <RewardsWidget balance={profile.rewardsBalance} streak={profile.engagementStreak} />
+          <RewardsWidget
+            profile={profile}
+            onProfileUpdate={updateProfile}
+          />
         )}
 
         {!profile && (
@@ -170,6 +204,7 @@ export default function FeedPage() {
             onReact={handleReact}
             onHelpful={handleHelpful}
             onReply={handleReply}
+            onTip={handleTip}
           />
         ))}
       </main>

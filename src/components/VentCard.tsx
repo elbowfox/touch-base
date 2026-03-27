@@ -5,6 +5,7 @@ import { Vent, KindnessReaction, UserProfile } from "@/lib/types";
 import { REACTIONS, timeAgo } from "@/lib/utils";
 import ResourceCard from "./ResourceCard";
 import ReachOutModal from "./ReachOutModal";
+import TipModal from "./TipModal";
 
 interface VentCardProps {
   vent: Vent;
@@ -13,6 +14,7 @@ interface VentCardProps {
   onReact?: (ventId: string, reaction: KindnessReaction) => Promise<void>;
   onHelpful?: (ventId: string) => void;
   onReply?: (ventId: string, content: string, anonymous: boolean) => void;
+  onTip?: (ventId: string, amountUsd: number) => void;
 }
 
 export default function VentCard({
@@ -22,6 +24,7 @@ export default function VentCard({
   onReact,
   onHelpful,
   onReply,
+  onTip,
 }: VentCardProps) {
   const [reactions, setReactions] = useState(vent.reactions);
   const [reacting, setReacting] = useState<KindnessReaction | null>(null);
@@ -29,6 +32,8 @@ export default function VentCard({
   const [showResources, setShowResources] = useState(false);
   const [showReachOut, setShowReachOut] = useState(false);
   const [showReply, setShowReply] = useState(false);
+  const [showTip, setShowTip] = useState(false);
+  const [tipCount, setTipCount] = useState(0);
   const [replyText, setReplyText] = useState("");
   const [replyAnon, setReplyAnon] = useState(true);
 
@@ -125,6 +130,14 @@ export default function VentCard({
             💬 Reply
           </button>
         )}
+        {onTip && (
+          <button
+            onClick={() => setShowTip(true)}
+            className="text-xs text-rose-400 hover:text-rose-600 dark:hover:text-rose-300 transition-colors"
+          >
+            💸 Tip{tipCount > 0 ? ` (${tipCount})` : ""}
+          </button>
+        )}
         {vent.resources && vent.resources.length > 0 && (
           <button
             onClick={() => setShowResources(!showResources)}
@@ -202,6 +215,18 @@ export default function VentCard({
         <ReachOutModal
           vent={vent}
           onClose={() => setShowReachOut(false)}
+        />
+      )}
+
+      {showTip && (
+        <TipModal
+          ventPreview={vent.content.slice(0, 120)}
+          onSuccess={(amountUsd) => {
+            setTipCount((n) => n + 1);
+            setShowTip(false);
+            onTip?.(vent.id, amountUsd);
+          }}
+          onClose={() => setShowTip(false)}
         />
       )}
     </article>

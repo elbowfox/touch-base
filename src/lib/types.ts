@@ -64,6 +64,9 @@ export interface UserProfile {
   engagementStreak: number;
   farcasterId?: number;
   farcasterHandle?: string;
+  // Sanctuary Premium
+  isPremium?: boolean;
+  premiumExpiry?: string; // ISO date string
 }
 
 // ─── Resources ───────────────────────────────────────────────────────────────

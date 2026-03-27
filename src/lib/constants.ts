@@ -7,7 +7,12 @@ export const KP_REWARDS = {
   DAILY_LOGIN: 2,
   STREAK_BONUS_7D: 25,
   STREAK_BONUS_30D: 100,
+  TIP_SENT: 20,
+  TIP_RECEIVED: 50,
 } as const;
+
+// Premium multiplier applied to all KP earnings for Sanctuary members
+export const PREMIUM_KP_MULTIPLIER = 2;
 
 // Milestones for Kindness Points
 export const KP_MILESTONES = [
