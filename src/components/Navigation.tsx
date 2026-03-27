@@ -7,6 +7,7 @@ const links = [
   { href: "/", label: "Home", icon: "🌿" },
   { href: "/feed", label: "Feed", icon: "🌊" },
   { href: "/compose", label: "Vent", icon: "✦" },
+  { href: "/import", label: "Import", icon: "📥" },
   { href: "/onboarding", label: "Profile", icon: "🤝" },
 ];
 
