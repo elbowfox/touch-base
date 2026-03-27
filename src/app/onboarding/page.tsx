@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { OnboardingStep, UserProfile } from "@/lib/types";
+import { KP_REWARDS } from "@/lib/constants";
 import WelcomeStep from "./steps/WelcomeStep";
 import LocationStep from "./steps/LocationStep";
 import ProfileStep from "./steps/ProfileStep";
@@ -53,11 +54,15 @@ export default function OnboardingPage() {
   }
 
   async function handleFinish() {
-    // Attach referral metadata to profile
+    // Attach referral metadata to profile and award bonus KP
     const finalProfile: UserProfile = {
       ...profile,
       ...(referralSource ? { referralSource } : {}),
       ...(referralToken ? { referralToken } : {}),
+      // Award 50 bonus KP for Elvis-referred users
+      ...(referralSource === "elvis"
+        ? { rewardsBalance: profile.rewardsBalance + KP_REWARDS.ELVIS_REFERRAL_BONUS }
+        : {}),
     };
 
     try {

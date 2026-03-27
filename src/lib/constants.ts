@@ -9,6 +9,7 @@ export const KP_REWARDS = {
   STREAK_BONUS_30D: 100,
   TIP_SENT: 20,
   TIP_RECEIVED: 50,
+  ELVIS_REFERRAL_BONUS: 50,
 } as const;
 
 // Premium multiplier applied to all KP earnings for Sanctuary members

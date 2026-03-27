@@ -13,9 +13,12 @@ export const USDC_ADDRESS: `0x${string}` =
     : USDC_ADDRESS_SEPOLIA;
 
 // Treasury address (receives all platform payments)
+// Treasury address (receives all platform payments)
+// WARNING: Set NEXT_PUBLIC_TREASURY_ADDRESS in env — the dead-address fallback
+// exists only to prevent build errors; transactions to it are unrecoverable.
 export const TREASURY_ADDRESS: `0x${string}` =
   (process.env.NEXT_PUBLIC_TREASURY_ADDRESS as `0x${string}`) ??
-  "0x0000000000000000000000000000000000000001";
+  "0x000000000000000000000000000000000000dEaD";
 
 // USDC uses 6 decimal places
 export const USDC_DECIMALS = 6;
