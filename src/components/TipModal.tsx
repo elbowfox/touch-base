@@ -30,7 +30,7 @@ export default function TipModal({ ventPreview, onSuccess, onClose }: Props) {
   const [amount, setAmount] = useState<number | null>(null);
 
   const calls = useCallback(
-    () => (amount ? [buildUsdcTransfer(TREASURY_ADDRESS, amount)] : []),
+    async () => (amount ? [buildUsdcTransfer(TREASURY_ADDRESS, amount)] : []),
     [amount]
   );
 

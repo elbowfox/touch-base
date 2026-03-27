@@ -33,7 +33,7 @@ export default function BoosterPacksModal({ profile, onSuccess, onClose }: Props
   const [purchased, setPurchased] = useState<string | null>(null);
 
   const calls = useCallback(
-    () =>
+    async () =>
       selected
         ? [buildUsdcTransfer(TREASURY_ADDRESS, selected.priceUsd)]
         : [],

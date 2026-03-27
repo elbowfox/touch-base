@@ -30,7 +30,7 @@ interface Props {
 
 export default function PremiumModal({ profile, onSuccess, onClose }: Props) {
   const calls = useCallback(
-    () => [buildUsdcTransfer(TREASURY_ADDRESS, PREMIUM_MONTHLY_PRICE_USD)],
+    async () => [buildUsdcTransfer(TREASURY_ADDRESS, PREMIUM_MONTHLY_PRICE_USD)],
     []
   );
 
