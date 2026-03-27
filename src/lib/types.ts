@@ -104,6 +104,26 @@ export interface KPMilestone {
   reached: boolean;
 }
 
+// ─── Data Import ─────────────────────────────────────────────────────────────
+
+export interface ImportVent {
+  content: string;
+  createdAt?: string;
+  anonymous?: boolean;
+  authorHandle?: string;
+  authorFid?: number;
+  tags?: string[];
+}
+
+export interface ImportPayload {
+  vents?: ImportVent[];
+}
+
+export interface ImportResult {
+  imported: number;
+  errors: string[];
+}
+
 // ─── Mini-app Manifest ───────────────────────────────────────────────────────
 
 export interface MiniAppManifest {
