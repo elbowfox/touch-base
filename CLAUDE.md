@@ -83,6 +83,41 @@ filesystem tree example, and a tailored Garden view layout.
 7. **Garden View** — sidebar nav, file list (folders-first), tags, staleness opacity, suggestions panel
 8. **Recent / Suggestions / Settings** — navigable from sidebar
 
+### Brand Voice + Manifesto Copy
+
+> This is the soul of FileGarden. Use it verbatim wherever possible — landing page, app manifesto screen, Gumroad listing, YouTube opener, Teachable intro, README hero. Rand's words, Rand's voice. Never dilute it.
+
+---
+
+*"Your creative process is sacred. A hardwon asset born from time you'll never get back — but what if those spent hours could serve a higher function in your life? What if they could keep serving you, indefinitely?*
+
+*Transmuting one of this life's most sacred yet perishable resources, so value is never lost — just reconfigured.*
+
+*Leverage those reconfigured resources by discovering your digital archetype.*
+
+*So many brilliant creators, world builders, virtual visionaries — you and your creative process shouldn't be strangers. Give it a name. Help it evolve. Give your creative process a name, so you can call upon it at will.*
+
+*Because everyone should be on a first name basis with their own imagination.*
+
+*Discover your digital archetype. Revolutionize the grind — er, 'workflow.' Cute. Another one of Silicon Valley's contrived little colloquial euphemisms designed to rebrand wage slavery into something edgy and elective.*
+
+*Nice try, nerds."*
+
+---
+
+**Tone pillars:**
+- Reverent about creativity and time — these are sacred, not productivity metrics
+- Alchemical / transmutation framing — time spent becomes lasting value
+- Anti-jargon, anti-corporate — "workflow" is a slur, "grind" is honest
+- Sharp wit with a philosophical edge — never snarky, always substantive
+- Deeply personal — speaks directly to the creator, not "the user"
+
+**What to never say:** workflow, productivity, optimize, synergy, streamline, leverage (unless Rand uses it), hustle, disrupt, scalable, robust
+
+**What to always say:** tend, cultivate, discover, transmute, sacred, reconfigure, archetype, nature, dojo, garden
+
+---
+
 ### Tech Stack
 - **Backend:** Rust (Tauri)
 - **Frontend:** Vanilla JS + CSS (no framework)
